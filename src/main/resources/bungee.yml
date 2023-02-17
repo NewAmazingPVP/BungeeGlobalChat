@@ -1,4 +1,4 @@
 name: BungeeGlobalChat
-version: '${project.version}'
+version: '1.0'
 main: bungeeglobalchat.bungeeglobalchat.BungeeGlobalChat
 description: A BungeeCord plugin that enables global chat across your network

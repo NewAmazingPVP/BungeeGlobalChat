@@ -2,6 +2,7 @@ package bungeeglobalchat.bungeeglobalchat;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -21,17 +22,17 @@ public class BungeeGlobalChat extends Plugin implements Listener {
         if (event.isCommand()) {
             return;
         }
-
+    
         String message = event.getMessage();
-        String name = event.getSender().getName();
-        String serverName = event.getSender().getServer().getInfo().getName();
-
+        String name = event.getSender() instanceof ProxiedPlayer ? ((ProxiedPlayer) event.getSender()).getName() : "CONSOLE";
+        String serverName = event.getSender() instanceof ProxiedPlayer ? ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName() : getProxy().getName();
+    
         TextComponent formattedMessage = new TextComponent("[" + serverName + "] <" + name + "> " + message);
         formattedMessage.setColor(ChatColor.GRAY);
-
+    
         getProxy().broadcast(formattedMessage);
-
+    
         // Cancel the chat event so that the message is not sent locally
         event.setCancelled(true);
-    }
+    }    
 }
