@@ -19,20 +19,18 @@ public class BungeeGlobalChat extends Plugin implements Listener {
     }
 
     public void onChat(ChatEvent event) {
-        if (event.isCommand()) {
-            return;
+        if (!event.isCommand() && event.getSender() instanceof ProxiedPlayer) {
+            String message = event.getMessage();
+            String name = ((ProxiedPlayer) event.getSender()).getName();
+            String serverName = ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName();
+
+            TextComponent formattedMessage = new TextComponent("[" + serverName + "] <" + name + "> :" + message);
+            formattedMessage.setColor(ChatColor.GRAY);
+
+            getProxy().broadcast(formattedMessage);
+
+            // Cancel the chat event so that the message is not sent locally
+            event.setCancelled(true);
         }
-    
-        String message = event.getMessage();
-        String name = event.getSender() instanceof ProxiedPlayer ? ((ProxiedPlayer) event.getSender()).getName() : "CONSOLE";
-        String serverName = event.getSender() instanceof ProxiedPlayer ? ((ProxiedPlayer) event.getSender()).getServer().getInfo().getName() : getProxy().getName();
-    
-        TextComponent formattedMessage = new TextComponent("[" + serverName + "] <" + name + "> " + message);
-        formattedMessage.setColor(ChatColor.GRAY);
-    
-        getProxy().broadcast(formattedMessage);
-    
-        // Cancel the chat event so that the message is not sent locally
-        event.setCancelled(true);
-    }    
+    }
 }
